@@ -11,7 +11,7 @@ class AutoTST:
 
     Documentation with example of the class goes here
     """
-    def __int__(self, X, Y, model=AutoGluonTabularPredictor(), split_ratio=0.5):
+    def __init__(self, X, Y, model=AutoGluonTabularPredictor(), split_ratio=0.5):
         """
         Constructor
         Add doc for params here
