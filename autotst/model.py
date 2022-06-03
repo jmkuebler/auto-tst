@@ -26,6 +26,17 @@ class AutoGluonTabularPredictor(Model):
         self.model = TabularPredictor(label='label', sample_weight='weights', problem_type='regression', **kwargs)
 
     def fit(self, data_train, label_train, weights, presets='best_quality', time_limit=60, verbosity=0, **kwargs):
+        """
+        Wrapper around fit routine.
+        :param data_train: training data
+        :param label_train: training labels
+        :param weights: weights for the loss
+        :param presets: Autogluon preset
+        :param time_limit: time limit for train (seconds)
+        :param verbosity: control output of Autogluon
+        :param kwargs: other arguments to be passed to AutoGluon's fit routine.
+        :return:
+        """
         df_train = pd.DataFrame(data_train)
         df_train['label'] = label_train
         df_train['weights'] = weights
