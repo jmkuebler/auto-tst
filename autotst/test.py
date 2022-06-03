@@ -6,6 +6,7 @@ from .model import AutoGluonTabularPredictor
 def permutations_p_value(predictions, labels, permutations=10000):
     """
     Compute p value of the witness mean discrepancy test statistic via permutations
+
     :param predictions: one-dimensional array with the witness predictions of the test data
     :param labels: one-dimensional array with labels 1 and 0 indicating data coming from P or Q
     :param int permutations: Number of permutations
@@ -35,6 +36,7 @@ class AutoTST:
     def __init__(self, sample_p, sample_q, split_ratio=0.5, model=AutoGluonTabularPredictor, **model_kwargs):
         """
         Constructor
+
         :param sample_p: Sample drawn from P
         :param sample_q: Sample drawn from Q
         :param split_ratio: Ratio that defines how much data is used for training the witness
@@ -56,6 +58,7 @@ class AutoTST:
     def split_data(self):
         """
         Split & label data using the instances splitting ratio. The splits are stored as attributes but also returned.
+
         :return: tuple, length=4. Tuple containing training/test data and train/test labels.
         """
         n = len(self.X)
@@ -73,6 +76,7 @@ class AutoTST:
     def fit_witness(self, **kwargs):
         """
         Fit witness
+
         :param kwargs: Keyword arguments to be passed to fit method of model
         :return: None
         """
@@ -82,7 +86,8 @@ class AutoTST:
 
     def p_value_evaluate(self, permutations=10000):
         """
-        Evaluate p value
+        Evaluate p value.
+
         :param permutations: number of permutations when estimating the p-value
         :return: p value
         """
@@ -93,6 +98,7 @@ class AutoTST:
     def p_value(self):
         """
         Run the complete pipeline and return p value with default settings.
+
         :return: p-value
         """
         self.split_data()
@@ -103,6 +109,7 @@ class AutoTST:
     def interpret(self, k=1):
         """
         Return the k most typical examples from P and Q.
+
         :return: Tuple: (k most significant examples from P, k most significant examples from Q)
         """
         if self.prediction_test is None:
