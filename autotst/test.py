@@ -4,10 +4,17 @@ from .model import AutoGluonTabularPredictor
 
 
 def permutations_p_value(predictions, labels, permutations=10000):
+    """
+    Compute p value of the witness mean discrepancy test statistic via permutations
+    :param predictions: one-dimensional array with the witness predictions of the test data
+    :param labels: one-dimensional array with labels 1 and 0 indicating data coming from P or Q
+    :param int permutations: Number of permutations
+    :return: p value
+    """
     p_samp = predictions[labels == 1]
     q_samp = predictions[labels == 0]
     tau = np.mean(p_samp) - np.mean(q_samp)  # value on original partition
-    p = 0
+    p = 0.
     for i in range(0, permutations):
         np.random.shuffle(predictions)
         p_samp = predictions[labels == 1]
@@ -48,7 +55,7 @@ class AutoTST:
 
     def split_data(self):
         """
-        Split & label data
+        Split & label data using the instances splitting ratio. The splits are stored as attributes but also returned.
         :return: tuple, length=4. Tuple containing training/test data and train/test labels.
         """
         n = len(self.X)
@@ -69,6 +76,7 @@ class AutoTST:
         :param kwargs: Keyword arguments to be passed to fit method of model
         :return: None
         """
+        # specify weights (only relevant for imbalanced samples)
         weights = [1 - self.size_ratio if label == 1 else self.size_ratio for label in self.label_train]
         self.model.fit(self.data_train, self.label_train, weights, **kwargs)
 
@@ -84,7 +92,7 @@ class AutoTST:
 
     def p_value(self):
         """
-        Run the complete pipeline and return p value
+        Run the complete pipeline and return p value with default settings.
         :return: p-value
         """
         self.split_data()
@@ -94,8 +102,10 @@ class AutoTST:
 
     def interpret(self, k=1):
         """
-        Return the most typical examples from P and Q
+        Return the k most typical examples from P and Q.
         :return: Tuple: (k most significant examples from P, k most significant examples from Q)
         """
+        if self.prediction_test is None:
+            raise RuntimeError('Interpretation can only be done after the p-value was computed.')
         most_typical = np.argsort(self.prediction_test)
         return self.data_test[most_typical[-k:]], self.data_test[most_typical[:k]]
