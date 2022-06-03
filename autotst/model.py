@@ -1,21 +1,20 @@
 # Import packages
-import numpy as np
-
+from autogluon.tabular import TabularPredictor, TabularDataset
+import pandas as pd
 
 
 class Model:
     """
     Generic model class for two-sample tests
     """
-    def __int__(self):
+    def __init__(self):
         raise NotImplementedError()
 
-    def fit(self, X):
+    def fit(self, data_train, label_train, weights):
         raise NotImplementedError()
 
-    def predict(self, X):
+    def predict(self, data_test):
         raise NotImplementedError()
-
 
 
 class AutoGluonTabularPredictor(Model):
@@ -23,12 +22,16 @@ class AutoGluonTabularPredictor(Model):
     Wrapper model for the Tabular Predictor of the AutoGluon
     package
     """
-    def __int__(self):
-        pass
+    def __init__(self, **kwargs):
+        self.model = TabularPredictor(label='label', sample_weight='weights', problem_type='regression', **kwargs)
 
-    def fit(self, X):
-        pass
+    def fit(self, data_train, label_train, weights, presets='best_quality', time_limit=60, verbosity=0, **kwargs):
+        df_train = pd.DataFrame(data_train)
+        df_train['label'] = label_train
+        df_train['weights'] = weights
+        df_train = TabularDataset(df_train)
+        self.model.fit(df_train, presets=presets, time_limit=time_limit, verbosity=verbosity, **kwargs)
 
-    def predict(self, X):
-        pass
-
+    def predict(self, data_test):
+        df_test = TabularDataset(pd.DataFrame(data_test))
+        return self.model.predict(df_test)

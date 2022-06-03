@@ -1,8 +1,22 @@
 # Import packages
 import numpy as np
-
 from .model import AutoGluonTabularPredictor
 
+
+def permutations_p_value(predictions, labels, permutations=10000):
+    p_samp = predictions[labels == 1]
+    q_samp = predictions[labels == 0]
+    tau = np.mean(p_samp) - np.mean(q_samp)  # value on original partition
+    p = 0
+    for i in range(0, permutations):
+        np.random.shuffle(predictions)
+        p_samp = predictions[labels == 1]
+        q_samp = predictions[labels == 0]
+        tau_sim = np.mean(p_samp) - np.mean(q_samp)
+
+        if tau <= tau_sim:
+            p += np.float(1 / permutations)
+    return p
 
 
 class AutoTST:
@@ -11,41 +25,77 @@ class AutoTST:
 
     Documentation with example of the class goes here
     """
-    def __init__(self, X, Y, model=AutoGluonTabularPredictor(), split_ratio=0.5):
+    def __init__(self, sample_p, sample_q, split_ratio=0.5, model=AutoGluonTabularPredictor, **model_kwargs):
         """
         Constructor
-        Add doc for params here
-        :param X:
-        :param Y:
-        :param model:
-        :param split_ratio:
-        :return:
+        :param sample_p: Sample drawn from P
+        :param sample_q: Sample drawn from Q
+        :param split_ratio: Ratio that defines how much data is used for training the witness
+        :param model: Model used to learn the witness function
+        :param **model_kwargs: Keyword arguments to initialize the model
+        :return: None
         """
-        pass
+        self.X = sample_p
+        self.Y = sample_q
+        self.model = model(**model_kwargs)
+        self.split_ratio = split_ratio
+        self.size_ratio = len(sample_p) / (len(sample_p) + len(sample_q))
+        self.data_train = None
+        self.data_test = None
+        self.label_train = None
+        self.label_test = None
+        self.prediction_test = None
 
     def split_data(self):
         """
         Split & label data
-        :return:
+        :return: tuple, length=4. Tuple containing training/test data and train/test labels.
         """
-        pass
+        n = len(self.X)
+        n_train = int(n * self.split_ratio)
+        m = len(self.Y)
+        m_train = int(m * self.split_ratio)
+        X_train, X_test = self.X[:n_train], self.X[n_train:]
+        Y_train, Y_test = self.Y[:m_train], self.Y[m_train:]
+        self.data_train = np.concatenate((X_train, Y_train))
+        self.data_test = np.concatenate((X_test, Y_test))
+        self.label_train = np.array([1] * n_train + [0] * m_train)
+        self.label_test = np.array([1] * (n - n_train) + [0] * (m - m_train))
+        return self.data_train, self.data_test, self.label_train, self.label_test
 
-    def fit_witness(self):
+    def fit_witness(self, **kwargs):
         """
         Fit witness
-        :return:
+        :param kwargs: Keyword arguments to be passed to fit method of model
+        :return: None
         """
-        pass
+        weights = [1 - self.size_ratio if label == 1 else self.size_ratio for label in self.label_train]
+        self.model.fit(self.data_train, self.label_train, weights, **kwargs)
 
-    def p_value_evaluate(self):
+    def p_value_evaluate(self, permutations=10000):
         """
         Evaluate p value
-        :return:
+        :param permutations: number of permutations when estimating the p-value
+        :return: p value
         """
-        pass
+        self.prediction_test = self.model.predict(self.data_test)
+        pval = permutations_p_value(np.array(self.prediction_test), self.label_test, permutations=permutations)
+        return pval
 
     def p_value(self):
+        """
+        Run the complete pipeline and return p value
+        :return: p-value
+        """
         self.split_data()
         self.fit_witness()
         pval = self.p_value_evaluate()
         return pval
+
+    def interpret(self, k=1):
+        """
+        Return the most typical examples from P and Q
+        :return: Tuple: (k most significant examples from P, k most significant examples from Q)
+        """
+        most_typical = np.argsort(self.prediction_test)
+        return self.data_test[most_typical[-k:]], self.data_test[most_typical[:k]]
