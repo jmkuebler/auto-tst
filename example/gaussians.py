@@ -3,10 +3,10 @@ import autotst
 from autotst.model import AutoGluonTabularPredictor
 
 # You can play around with the datasets here
-# 2-dimensional Gaussians
+# # 2-dimensional Gaussians
 # X = np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]], size=40)
 # Y = np.random.multivariate_normal([1, 0], [[1, 0], [0, 1]], size=20)
-
+#  # 1-dimensional Gaussians
 X = np.random.normal(0, 1, size=40)
 Y = np.random.normal(1, 1, size=20)
 
