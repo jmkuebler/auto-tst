@@ -65,8 +65,8 @@ tst = autotst.AutoTST(sample_P, sample_Q, model=YourCustomModel)
 ... etc.
 ```
 
-We also provide a wrapper for `AutoGluonImagePredictor`. However, it seems that this should only be used 
-with large datasets and longer training times.
+We also provide a wrapper for `AutoGluonImagePredictor`. However, it seems that this should not be used 
+with small datasets and small training times.
 
 ## References
 Jonas M. Kübler, Vincent Stimper, Simon Buchholz, Krikamol Muandet, Bernhard Schölkopf: "AutoML Two-Sample Test" (2022).
