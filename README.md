@@ -20,7 +20,7 @@ pip install --upgrade .
 
 ## How to use `autotst`
 We provide worked out examples in the 'Example' directory. In the following assume that
-`data_P` and `data_Q` are two `numpy` arrays containing samples from P and Q. 
+`sample_P` and `sample_Q` are two `numpy` arrays containing samples from P and Q. 
 
 ### Default Usage:
 
