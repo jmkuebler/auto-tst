@@ -10,10 +10,10 @@ class Model:
     """
     Generic model class for two-sample tests
     """
-    def __init__(self):
+    def __init__(self,**kwargs):
         raise NotImplementedError()
 
-    def fit(self, data_train, label_train, weights):
+    def fit(self, data_train, label_train, weights, **kwargs):
         raise NotImplementedError()
 
     def predict(self, data_test):

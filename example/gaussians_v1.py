@@ -13,7 +13,7 @@ Y = np.random.normal(1, 1, size=20)
 print("----- running test step by step with custom time limit -----")
 tst = autotst.AutoTST(X, Y, model=AutoGluonTabularPredictor)
 
-data_train, data_test, label_train, label_test = tst.split_data()
+splitted_sets : autotst.SplittedSets = tst.split_data()
 tst.fit_witness(time_limit=5)
 print("P-Value", tst.p_value_evaluate())
 print("Most significant examples from P and Q: ", tst.interpret(1))

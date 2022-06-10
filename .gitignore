@@ -1,6 +1,9 @@
 # models created when running examples
 *AutogluonModels*
 
+# emacs tmp files
+*~
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
