@@ -1,0 +1,21 @@
+name: Linters
+
+on: [pull_request]
+
+jobs:
+  flake8:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install
+        run: |
+          python3 -m pip install flake8
+      - name: Add matcher
+        run: |
+          echo "::add-matcher::.github/workflows/flake8-problem-matcher.json"
+      - name: Lint with flake8
+        run: |
+          python3 -m flake8 .

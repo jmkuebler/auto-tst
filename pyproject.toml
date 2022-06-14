@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "autotst"
+version = "1.0"
+description = "two-samples testing and distribution shift detection"
+authors = [
+	"Jonas M. Kübler <jonas.m.kuebler@tuebingen.mpg.de>",
+	"Vincent Stimper <vincent.stimper@tuebingen.mpg.de>"
+]
+packages = [
+	 { include = "autotst" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+numpy = "^1.22.4"
+sklearn = "^0.0"
+autogluon = "^0.4.2"
+pandas = "^1.3.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy.overrides]
+module = [
+       "autogluon",
+       "pandas",
+       "nptyping",
+]
+ignore_missing_imports = true
