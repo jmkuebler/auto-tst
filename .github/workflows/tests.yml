@@ -1,10 +1,20 @@
 name: Tests
 
+# **What is does**: clone the repository, install it and run pytest
+# **Why we have it**: to make sure the unit-tests pass with success
+# **Who does it impact**: the unit-tests in the tests folder
+# **When does it run**: upon pull request to the main branch 
+
 on:
-  push:
-    branches:
-      - vberenz/refactor
+
+  workflow_dispatch:
+#   push:
+#    branches:
+#      - vberenz/refactor
 #  pull_request:
+
+permissions:
+  
 
 jobs:
   test:
@@ -19,7 +29,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
