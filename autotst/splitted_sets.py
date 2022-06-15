@@ -4,6 +4,10 @@ from .autotst_types import Samples, Dataset, Labels
 
 
 class SplittedSets:
+    """
+    Class encapsulating datasets and labels dividing into testing and training.
+    """
+
     def __init__(
         self,
         training_set: Dataset,
@@ -17,11 +21,20 @@ class SplittedSets:
         self.test_labels = test_labels
 
     def training_split(self) -> typing.Tuple[int, int]:
+        """
+        Returns the number p and q of items that have been drawn
+        respectively from the distributions P and Q
+        in the training set. The first pth items of the trainign set
+        correspond to P, and the following qth items correspond to Q.
+        """
         p = len(np.where(self.training_labels == 1)[0])
         q = len(self.training_set) - p
         return p, q
 
     def test_split(self) -> typing.Tuple[int, int]:
+        """
+        Similar to training_split, but for the testing set.
+        """
         p = len(np.where(self.test_labels == 1)[0])
         q = len(self.test_set) - p
         return p, q
@@ -30,6 +43,14 @@ class SplittedSets:
     def split(
         X: Samples, Y: Samples, split_ratio: float
     ) -> typing.Tuple[Dataset, Dataset, Labels, Labels]:
+
+        """
+        Creates a labeled dataset that concatenates the samples drawn from the distributions
+        X and Y, and splits it between a training and a testing sets. Labels are binaries with
+        values 1 for samples drawn from P and 0 for samples drawn from Q.
+        The returned tuples has for values: training set, testing set, labels for training set,
+        labels for testing set.
+        """
 
         if X.shape[1:] != Y.shape[1:]:
             raise ValueError("X and Y should be samples of items of same dimension")
@@ -53,4 +74,9 @@ class SplittedSets:
     def from_samples(
         cls, sample_p: Samples, sample_q: Samples, split_ratio: float = 0.5
     ) -> object:
+        """
+        Creates a labeled dataset that concatenates the samples drawn from the distributions
+        P and Q, and splits it between a training and a testing sets. Labels are binaries with
+        values 1 for samples drawn from P and 0 for samples drawn from Q.
+        """
         return cls(*cls.split(sample_p, sample_q, split_ratio))
