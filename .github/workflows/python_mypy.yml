@@ -18,4 +18,4 @@ jobs:
           echo "::add-matcher::.github/workflows/mypy-problem-matcher.json"
       - name: Run mypy
         run: |
-          python3 -m mypy --ignore-missing-imports --exclude doc .
+          python3 -m mypy --ignore-missing-imports --exclude doc --exclude example .
