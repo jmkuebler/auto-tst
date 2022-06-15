@@ -20,7 +20,7 @@ for i in tqdm(range(100)):
         X, Y, model=AutoGluonTabularPredictor, path=f"AutogluonModels_type_I/type_I_{i}"
     )
 
-    splitted_sets : autotst.SplittedSets = tst.split_data()
+    splitted_sets: autotst.SplittedSets = tst.split_data()
     tst.fit_witness(time_limit=2)  # using 2 seconds limit to make it relatively fast.
     p_values.append(tst.p_value_evaluate())
 

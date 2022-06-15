@@ -31,9 +31,8 @@ autotst.fit_witness(
 )
 
 predictions, p_value = autotst.p_value_evaluate(
-    model,
-    splitted_sets.test_set,
-    splitted_sets.test_labels)
+    model, splitted_sets.test_set, splitted_sets.test_labels
+)
 
 most_significants = autotst.interpret(splitted_sets.test_set, predictions, k=1)
 

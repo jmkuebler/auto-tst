@@ -74,4 +74,3 @@ def setup(app):
 
 
 autoclass_content = "both"
-
