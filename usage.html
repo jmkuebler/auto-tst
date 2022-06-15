@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to use autotst &mdash; autotst  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Author and licensing" href="author_and_copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> autotst
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="author_and_copyright.html">Author and licensing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to use <code class="docutils literal notranslate"><span class="pre">autotst</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#default-usage">Default Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-the-testing-pipeline">Customizing the testing pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-the-machine-learning-model">Customizing the machine learning model</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">autotst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>How to use <code class="docutils literal notranslate"><span class="pre">autotst</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-use-autotst">
+<h1>How to use <code class="docutils literal notranslate"><span class="pre">autotst</span></code><a class="headerlink" href="#how-to-use-autotst" title="Permalink to this heading"></a></h1>
+<p>We provide worked out examples in the ‘Example’ directory. In the following assume that
+<code class="docutils literal notranslate"><span class="pre">sample_P</span></code> and <code class="docutils literal notranslate"><span class="pre">sample_Q</span></code> are two <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays containing samples from P and Q.</p>
+<section id="default-usage">
+<h2>Default Usage:<a class="headerlink" href="#default-usage" title="Permalink to this heading"></a></h2>
+<p>The easiest way to compute a p-value is to use the default settings</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">autotst</span>
+<span class="n">tst</span> <span class="o">=</span> <span class="n">autotst</span><span class="o">.</span><span class="n">AutoTST</span><span class="p">(</span><span class="n">sample_P</span><span class="p">,</span> <span class="n">sample_Q</span><span class="p">)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">p_value</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You would then reject the null hypothesis if <code class="docutils literal notranslate"><span class="pre">p_value</span></code> is smaller or equal to your significance level.</p>
+</section>
+<section id="customizing-the-testing-pipeline">
+<h2>Customizing the testing pipeline<a class="headerlink" href="#customizing-the-testing-pipeline" title="Permalink to this heading"></a></h2>
+<p>We highly recommend to use the pipeline step by step, which would look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">autotst</span>
+<span class="kn">from</span> <span class="nn">autotst.model</span> <span class="kn">import</span> <span class="n">AutoGluonTabularPredictor</span>
+
+<span class="n">tst</span> <span class="o">=</span> <span class="n">autotst</span><span class="o">.</span><span class="n">AutoTST</span><span class="p">(</span><span class="n">sample_P</span><span class="p">,</span> <span class="n">sample_Q</span><span class="p">,</span> <span class="n">split_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">AutoGluonTabularPredictor</span><span class="p">)</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">split_data</span><span class="p">()</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">fit_witness</span><span class="p">(</span><span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># time limit adjustable to your needs (in seconds)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">p_value_evaluate</span><span class="p">(</span><span class="n">permutations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>  <span class="c1"># control number of permutations in the estimation</span>
+</pre></div>
+</div>
+<p>This allows you to change the time limit for fitting the witness function and you can also pass other
+arguments to the fit model (see <a class="reference external" href="https://auto.gluon.ai/">AutoGluon</a> documentation).</p>
+<p>Since the permutations are very cheap, the default number of permutations is relatively high and should work for most
+use-cases. If your significance level is, say, smaller than 1/1000, consider increasing it further.</p>
+</section>
+<section id="customizing-the-machine-learning-model">
+<h2>Customizing the machine learning model<a class="headerlink" href="#customizing-the-machine-learning-model" title="Permalink to this heading"></a></h2>
+<p>If you have good domain knowledge about your problem and believe that a specific ML framework will work well,
+it is easy to wrap your model.
+Therefore, simply inherit from the class <code class="docutils literal notranslate"><span class="pre">Model</span></code> and wrap the methods
+(see our implementation in <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">model.py</span></code></span>).</p>
+<p>You can then run the test simply by importing your model and initializing the test accordingly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">autotst</span>
+
+<span class="n">tst</span> <span class="o">=</span> <span class="n">autotst</span><span class="o">.</span><span class="n">AutoTST</span><span class="p">(</span><span class="n">sample_P</span><span class="p">,</span> <span class="n">sample_Q</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">YourCustomModel</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">...</span> <span class="n">etc</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>We also provide a wrapper for <code class="docutils literal notranslate"><span class="pre">AutoGluonImagePredictor</span></code>. However, it seems that this should not be used
+with small datasets and small training times.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="author_and_copyright.html" class="btn btn-neutral float-left" title="Author and licensing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Max Planck Society.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
