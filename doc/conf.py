@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 #
 
+# flake8: noqa
+
 import sys
 import os
 import pathlib
