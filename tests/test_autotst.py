@@ -3,10 +3,6 @@ import numpy as np
 import autotst
 
 
-def test_fail():
-
-    assert 1==2
-
 def test_permutations_p_value():
 
     # perfect predictions
