@@ -2,8 +2,7 @@
 
 [![Checked with MyPy](https://img.shields.io/badge/mypy-checked-blue)](https://github.com/python/mypy)
 [![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-![Tests](https://github.com/jmkuebler/auto-tst/workflows/Tests/badge.svg?branch=vberenz/refactor)
-
+[![Tests](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml/badge.svg)](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml)
 
 
 
