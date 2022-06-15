@@ -67,4 +67,6 @@ jobs:
         run: |
           source .venv/bin/activate
           pytest tests/
-          report
+	  result_code=${PIPESTATUS[0]}
+          echo "::set-output name=log::$(cat test.log)"
+          exit $result_code
