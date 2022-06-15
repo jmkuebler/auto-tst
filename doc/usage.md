@@ -1,30 +1,3 @@
-# AutoML Two-Sample Test
-
-[![Checked with MyPy](https://img.shields.io/badge/mypy-checked-blue)](https://github.com/python/mypy)
-[![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![Tests](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml/badge.svg)](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-
-autotst is a Python package for easy-to-use two-sample testing and distribution shift detection.
-
-Given two datasets `sample_P` and `sample_Q` drawn from distributions $P$ and $Q$, the 
-goal is to estimate a $p$ value for the null hypothesis $P=Q$.
-`autotst` achieves this by learning a witness function and taking its mean discrepancy as a test statistic
-(see References).
-
-The package provides functionalities to prepare the data, an interface to train an ML model, and methods
-to evaluate p values and interpret results.
-
-By default, autotst uses the Tabular Predictor of [AutoGluon](https://auto.gluon.ai/), but it is easy 
-to wrap and use your own favorite ML framework (see below).
-
-## Installation
-Requires at least Python 3.7. Since the installation also installs AutoGluon, it can take a few moments.
-```
-pip install --upgrade .
-```
-
 ## How to use `autotst`
 We provide worked out examples in the 'Example' directory. In the following assume that
 `sample_P` and `sample_Q` are two `numpy` arrays containing samples from P and Q. 
@@ -74,6 +47,3 @@ tst = autotst.AutoTST(sample_P, sample_Q, model=YourCustomModel)
 
 We also provide a wrapper for `AutoGluonImagePredictor`. However, it seems that this should not be used 
 with small datasets and small training times.
-
-## References
-Jonas M. Kübler, Vincent Stimper, Simon Buchholz, Krikamol Muandet, Bernhard Schölkopf: "AutoML Two-Sample Test" (2022).
