@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 #
 
-import sys, os, pathlib
+import sys
+import os
+import pathlib
 
 ###########################
 # adding the autotst code #
