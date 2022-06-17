@@ -4,17 +4,18 @@
 [![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Tests](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml/badge.svg)](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI](https://img.shields.io/badge/PyPI-1.1-blue)](https://pypi.org/project/autotst/)
 
 
-autotst is a Python package for easy-to-use two-sample testing and distribution shift detection.
+`autotst` is a Python package for easy-to-use two-sample testing and distribution shift detection.
 
 Given two datasets `sample_P` and `sample_Q` drawn from distributions $P$ and $Q$, the 
-goal is to estimate a $p$ value for the null hypothesis $P=Q$.
+goal is to estimate a $p$-value for the null hypothesis $P=Q$.
 `autotst` achieves this by learning a witness function and taking its mean discrepancy as a test statistic
 (see References).
 
 The package provides functionalities to prepare the data, an interface to train an ML model, and methods
-to evaluate p values and interpret results.
+to evaluate $p$-values and interpret results.
 
 By default, autotst uses the Tabular Predictor of [AutoGluon](https://auto.gluon.ai/), but it is easy 
 to wrap and use your own favorite ML framework (see below).
@@ -22,16 +23,16 @@ to wrap and use your own favorite ML framework (see below).
 ## Installation
 Requires at least Python 3.7. Since the installation also installs AutoGluon, it can take a few moments.
 ```
-pip install --upgrade .
+pip install autotst
 ```
 
 ## How to use `autotst`
 We provide worked out examples in the 'Example' directory. In the following assume that
-`sample_P` and `sample_Q` are two `numpy` arrays containing samples from P and Q. 
+`sample_P` and `sample_Q` are two `numpy` arrays containing samples from $P$ and $Q$. 
 
 ### Default Usage:
 
-The easiest way to compute a p-value is to use the default settings
+The easiest way to compute a $p$-value is to use the default settings
 ```python
 import autotst
 tst = autotst.AutoTST(sample_P, sample_Q)
