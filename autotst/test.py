@@ -83,7 +83,7 @@ class AutoTST:
             self.prediction_test, label_test, permutations=permutations
         )
 
-    def p_value(self, permutations: int = 1000, **fit_kwargs):
+    def p_value(self, permutations: int = 10000, **fit_kwargs):
         """
         Run the complete pipeline and return p value with default settings.
 
