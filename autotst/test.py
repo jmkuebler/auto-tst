@@ -1,30 +1,9 @@
-# Import packages
+import typing
 import numpy as np
-from .model import AutoGluonTabularPredictor
-
-
-def permutations_p_value(predictions, labels, permutations=10000):
-    """
-    Compute p value of the witness mean discrepancy test statistic via permutations
-
-    :param predictions: one-dimensional array with the witness predictions of the test data
-    :param labels: one-dimensional array with labels 1 and 0 indicating data coming from P or Q
-    :param int permutations: Number of permutations
-    :return: p value
-    """
-    p_samp = predictions[labels == 1]
-    q_samp = predictions[labels == 0]
-    tau = np.mean(p_samp) - np.mean(q_samp)  # value on original partition
-    p = 0.
-    for i in range(0, permutations):
-        np.random.shuffle(predictions)
-        p_samp = predictions[labels == 1]
-        q_samp = predictions[labels == 0]
-        tau_sim = np.mean(p_samp) - np.mean(q_samp)
-
-        if tau <= tau_sim:
-            p += np.float(1 / permutations)
-    return p
+from .autotst_types import Samples, Dataset, Predictions
+from .splitted_sets import SplittedSets
+from .model import AutoGluonTabularPredictor, Model
+from . import functions
 
 
 class AutoTST:
@@ -33,7 +12,15 @@ class AutoTST:
 
     Documentation with example of the class goes here
     """
-    def __init__(self, sample_p, sample_q, split_ratio=0.5, model=AutoGluonTabularPredictor, **model_kwargs):
+
+    def __init__(
+        self,
+        sample_p: Samples,
+        sample_q: Samples,
+        split_ratio: float = 0.5,
+        model: typing.Type[Model] = AutoGluonTabularPredictor,
+        **model_kwargs
+    ) -> None:
         """
         Constructor
 
@@ -49,61 +36,62 @@ class AutoTST:
         self.model = model(**model_kwargs)
         self.split_ratio = split_ratio
         self.size_ratio = len(sample_p) / (len(sample_p) + len(sample_q))
-        self.data_train = None
-        self.data_test = None
-        self.label_train = None
-        self.label_test = None
-        self.prediction_test = None
+        self.splitted_sets: typing.Optional[SplittedSets] = None
+        self.prediction_test: typing.Optional[Predictions] = None
+        self._fitted = False
 
-    def split_data(self):
+    def split_data(self) -> SplittedSets:
         """
         Split & label data using the instances splitting ratio. The splits are stored as attributes but also returned.
-
-        :return: tuple, length=4. Tuple containing training/test data and train/test labels.
         """
-        n = len(self.X)
-        n_train = int(n * self.split_ratio)
-        m = len(self.Y)
-        m_train = int(m * self.split_ratio)
-        X_train, X_test = self.X[:n_train], self.X[n_train:]
-        Y_train, Y_test = self.Y[:m_train], self.Y[m_train:]
-        self.data_train = np.concatenate((X_train, Y_train))
-        self.data_test = np.concatenate((X_test, Y_test))
-        self.label_train = np.array([1] * n_train + [0] * m_train)
-        self.label_test = np.array([1] * (n - n_train) + [0] * (m - m_train))
-        return self.data_train, self.data_test, self.label_train, self.label_test
+        self.splitted_sets = typing.cast(
+            SplittedSets, SplittedSets.from_samples(self.X, self.Y, self.split_ratio)
+        )
+        return self.splitted_sets
 
-    def fit_witness(self, **kwargs):
+    def fit_witness(self, **kwargs) -> None:
         """
         Fit witness
 
         :param kwargs: Keyword arguments to be passed to fit method of model
         :return: None
         """
-        # specify weights (only relevant for imbalanced samples)
-        weights = [1 - self.size_ratio if label == 1 else self.size_ratio for label in self.label_train]
-        self.model.fit(self.data_train, self.label_train, weights, **kwargs)
+        if self.splitted_sets is None:
+            raise ValueError("split_data should be called first")
+        data_train = self.splitted_sets.training_set
+        label_train = self.splitted_sets.training_labels
+        functions.fit_witness(data_train, label_train, self.model, **kwargs)
+        self._fitted = True
 
-    def p_value_evaluate(self, permutations=10000):
+    def p_value_evaluate(self, permutations: int = 10000) -> float:
         """
         Evaluate p value.
 
         :param permutations: number of permutations when estimating the p-value
         :return: p value
         """
-        self.prediction_test = self.model.predict(self.data_test)
-        pval = permutations_p_value(np.array(self.prediction_test), self.label_test, permutations=permutations)
-        return pval
+        if permutations < 0:
+            raise ValueError("permutations should be positive")
+        if not self._fitted:
+            raise ValueError("the model should be trained first")
+        if not self.splitted_sets:
+            raise ValueError("split_data should be called first")
+        data_test = self.splitted_sets.test_set
+        label_test = self.splitted_sets.test_labels
+        self.prediction_test = np.array(self.model.predict(data_test))
+        return functions.permutations_p_value(
+            self.prediction_test, label_test, permutations=permutations
+        )
 
-    def p_value(self):
+    def p_value(self, permutations: int = 10000, **fit_kwargs):
         """
         Run the complete pipeline and return p value with default settings.
 
         :return: p-value
         """
         self.split_data()
-        self.fit_witness()
-        pval = self.p_value_evaluate()
+        self.fit_witness(**fit_kwargs)
+        pval = self.p_value_evaluate(permutations=permutations)
         return pval
 
     def interpret(self, k=1):
@@ -113,6 +101,10 @@ class AutoTST:
         :return: Tuple: (k most significant examples from P, k most significant examples from Q)
         """
         if self.prediction_test is None:
-            raise RuntimeError('Interpretation can only be done after the p-value was computed.')
-        most_typical = np.argsort(self.prediction_test)
-        return self.data_test[most_typical[-k:]], self.data_test[most_typical[:k]]
+            raise RuntimeError(
+                "Interpretation can only be done after the p-value was computed."
+            )
+        p, q = self.splitted_sets.training_split()
+        if k > p or k > q:
+            raise ValueError("k should be between {} and {}".format(p, q))
+        return functions.interpret(self.splitted_sets.test_set, self.prediction_test, k)
