@@ -134,4 +134,3 @@ def test_global():
     q = np.random.normal(1, 1, size=n2)
     p_value = autotst.p_value(p, q, time_limit=1)
     assert p_value < 0.05
-
