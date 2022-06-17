@@ -1,8 +1,8 @@
 # flake8: noqa
 
-import importlib.metadata
+import importlib_metadata
 
-__version__ = importlib.metadata.version("autotst")
+__version__ = importlib_metadata.version("autotst")
 
 from .autotst_types import Weights, Predictions, Labels, Samples, Dataset
 from .test import AutoTST
