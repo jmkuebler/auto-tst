@@ -20,6 +20,8 @@ to evaluate $p$-values and interpret results.
 By default, autotst uses the Tabular Predictor of [AutoGluon](https://auto.gluon.ai/), but it is easy 
 to wrap and use your own favorite ML framework (see below).
 
+The full documentation of the package can be found [here](https://jmkuebler.github.io/auto-tst/).
+
 ## Installation
 Requires at least Python 3.7. Since the installation also installs AutoGluon, it can take a few moments.
 ```
