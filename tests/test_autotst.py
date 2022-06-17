@@ -118,7 +118,7 @@ def test_pipelines():
     np.random.seed(seed=0)
     at = autotst.AutoTST(p, q)
     p2 = at.p_value()
-    
+
     assert pytest.approx(p1) == p2
 
 
