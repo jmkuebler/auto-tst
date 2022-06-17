@@ -1,3 +1,4 @@
+import time
 import copy
 import pytest
 import numpy as np
@@ -113,11 +114,11 @@ def test_pipelines():
     q = np.random.normal(0.75, 0.2, size=n2)
 
     np.random.seed(seed=0)
-    p1 = autotst.p_value(p, q)
+    p1 = autotst.p_value(p, q, presets="medium_quality", time_limit=None)
 
     np.random.seed(seed=0)
     at = autotst.AutoTST(p, q)
-    p2 = at.p_value()
+    p2 = at.p_value(presets="medium_quality", time_limit=None)
 
     assert pytest.approx(p1) == p2
 
