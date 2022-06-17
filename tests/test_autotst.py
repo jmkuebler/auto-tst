@@ -1,3 +1,4 @@
+import copy
 import pytest
 import numpy as np
 import autotst
@@ -109,13 +110,15 @@ def test_pipelines():
     n2 = 100
 
     p = np.random.normal(0.75, 0.2, size=n1)
-    q = np.random.normal(0.25, 0.2, size=n2)
+    q = np.random.normal(0.75, 0.2, size=n2)
 
-    p1 = autotst.p_value(p, q, time_limit=1)
+    np.random.seed(seed=0)
+    p1 = autotst.p_value(p, q)
 
+    np.random.seed(seed=0)
     at = autotst.AutoTST(p, q)
-    p2 = at.p_value(time_limit=1)
-
+    p2 = at.p_value()
+    
     assert pytest.approx(p1) == p2
 
 
@@ -125,9 +128,8 @@ def test_global():
     n2 = 200
 
     p = np.random.normal(1, 1, size=n1)
-    q = np.random.normal(1, 1, size=n2)
+    q = copy.deepcopy(p)
     p_value = autotst.p_value(p, q, time_limit=1)
-
     assert p_value > 0.1
 
     p = np.random.normal(0, 1, size=n1)
