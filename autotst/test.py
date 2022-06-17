@@ -60,7 +60,7 @@ class AutoTST:
             raise ValueError("split_data should be called first")
         data_train = self.splitted_sets.training_set
         label_train = self.splitted_sets.training_labels
-        functions.fit_witness(data_train, label_train, self.model)
+        functions.fit_witness(data_train, label_train, self.model, **kwargs)
         self._fitted = True
 
     def p_value_evaluate(self, permutations: int = 10000) -> float:
