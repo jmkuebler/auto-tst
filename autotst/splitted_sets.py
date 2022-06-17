@@ -52,7 +52,7 @@ class SplittedSets:
         labels for testing set.
         """
 
-        if X.shape[1:] != Y.shape[1:]:
+        if type(X) != list and X.shape[1:] != Y.shape[1:]:
             raise ValueError("X and Y should be samples of items of same dimension")
 
         if split_ratio < 0 or split_ratio > 1:
