@@ -79,4 +79,4 @@ We also provide a wrapper for `AutoGluonImagePredictor`. However, it seems that 
 with small datasets and small training times.
 
 ## References
-Jonas M. Kübler, Vincent Stimper, Simon Buchholz, Krikamol Muandet, Bernhard Schölkopf: "AutoML Two-Sample Test" (2022).
+Jonas M. Kübler, Vincent Stimper, Simon Buchholz, Krikamol Muandet, Bernhard Schölkopf: "AutoML Two-Sample Test", [arXiv 2206.08843](https://arxiv.org/abs/2206.08843) (2022)
