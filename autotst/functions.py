@@ -29,7 +29,7 @@ def permutations_p_value(
     p_samp = predictions[labels == 1]
     q_samp = predictions[labels == 0]
     tau = np.mean(p_samp) - np.mean(q_samp)  # value on original partition
-    p = 0.0
+    p = 1 / (permutations + 1)
     for i in range(0, permutations):
         np.random.shuffle(predictions)
         p_samp = predictions[labels == 1]
@@ -37,7 +37,7 @@ def permutations_p_value(
         tau_sim = np.mean(p_samp) - np.mean(q_samp)
 
         if tau <= tau_sim:
-            p += float(1 / permutations)
+            p += 1. / (permutations + 1)
 
     return p
 
