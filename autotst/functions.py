@@ -37,7 +37,7 @@ def permutations_p_value(
         tau_sim = np.mean(p_samp) - np.mean(q_samp)
 
         if tau <= tau_sim:
-            p += 1. / (permutations + 1)
+            p += 1.0 / (permutations + 1)
 
     return p
 

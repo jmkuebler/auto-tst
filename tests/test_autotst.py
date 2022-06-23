@@ -12,7 +12,7 @@ def test_permutations_p_value():
     labels = np.array([1 for _ in range(100)] + [0 for _ in range(200)])
     permutations = 10000
     p = autotst.permutations_p_value(preds, labels, permutations=permutations)
-    assert pytest.approx(p, 1e-3) == 1/(permutations + 1)
+    assert pytest.approx(p, 1e-3) == 1 / (permutations + 1)
 
     # totally undecided prediction
     preds = np.array([0.5 for _ in range(300)])
