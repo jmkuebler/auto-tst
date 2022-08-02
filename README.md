@@ -5,6 +5,7 @@
 [![Tests](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml/badge.svg)](https://github.com/jmkuebler/auto-tst/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI](https://img.shields.io/badge/PyPI-1.1-blue)](https://pypi.org/project/autotst/)
+[![Downloads](https://static.pepy.tech/personalized-badge/autotst?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads)](https://pepy.tech/project/autotst)
 [![arXiv](https://img.shields.io/badge/arXiv-2206.08843-b31b1b.svg)](https://arxiv.org/abs/2206.08843) 
 
 `autotst` is a Python package for easy-to-use two-sample testing and distribution shift detection.
