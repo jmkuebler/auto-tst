@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autotst"
-version = "1.1"
+version = "1.2"
 description = "Two-samples Testing and Distribution Shift Detection with AutoML"
 authors = [
 	"Jonas M. Kübler <jonas.m.kuebler@tuebingen.mpg.de>",
